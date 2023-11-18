@@ -1,0 +1,60 @@
+﻿@using PPPK_Zadatak04.Models;
+@model List<FileVM>
+
+@{
+    ViewBag.Title = "File Index";
+    var extensions = Model.Select(g => g.Extension.ToLower())
+                          .Distinct()
+                          .OrderBy(x => x);
+}
+
+<h2>All Files</h2>
+
+<div class="my-3">
+    <a href="@Url.Action("Upload", "FileStorage")" class="btn btn-primary me-2">Upload New File</a>
+    <select id="extensionFilter" class="form-select w-auto d-inline">
+        <option value="">All Extensions</option>
+        @foreach (var ext in extensions)
+        {
+            <option value="@ext">@ext</option>
+        }
+    </select>
+</div>
+
+<div id="filesList">
+    @foreach (var group in Model)
+    {
+        <div class="file-group my-3" data-extension="@group.Extension.ToLower()">
+            <h3>@group.Extension Files</h3>
+            <ul class="list-group">
+                @foreach (var file in group.Files)
+                {
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <a href="@Url.Action("Display", "FileStorage", new { fileName = file })" target="_blank" class="me-3">@file</a>
+                            <a href="@Url.Action("Download", "FileStorage", new { fileName = file })" class="btn btn-warning btn-sm me-2">Download</a>
+                            <a href="@Url.Action("Delete", "FileStorage", new { fileName = file })" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this file?');">Delete</a>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('extensionFilter').addEventListener('change', function() {
+            var selectedExtension = this.value.toLowerCase();
+            var filesList = document.getElementById('filesList');
+            filesList.querySelectorAll('.file-group').forEach(function(group) {
+                var groupExtension = group.getAttribute('data-extension').toLowerCase();
+                if (selectedExtension === '' || selectedExtension === groupExtension) {
+                    group.style.display = '';
+                } else {
+                    group.style.display = 'none';
+                }
+            });
+        });
+    </script>
+}

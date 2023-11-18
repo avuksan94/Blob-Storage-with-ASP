@@ -1,0 +1,27 @@
+﻿@using PPPK_Zadatak04.Models;
+@model PPPK_Zadatak04.Models.FileUploadVM;
+
+@{
+    ViewBag.Title = "Upload File";
+}
+
+<h2>Upload File</h2>
+<br>
+
+<form asp-action="Upload" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="File" class="control-label"></label>
+        <input type="file" asp-for="File" class="form-control" />
+        <span asp-validation-for="File" class="text-danger"></span>
+    </div>
+    <br>
+    <div class="form-group">
+        <input type="submit" value="Upload" class="btn btn-primary" />
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
